@@ -48,11 +48,29 @@ class Solution(object):
         return result
     
     # Solution 2 copied from Leetcode solutions
+
+    """
+    Create an array result of the same length as code to store the decrypted values.
+    If k is 0, return result, since all values should be zero.
+    Set initial start and end indices based on k.
+        If k > 0:
+            Set start = 1 and end = k.
+        If k < 0:
+            Set start to code.length - |k| and end to code.length - 1.
+    Calculate the initial sum of elements from start to end.
+    Loop through each index i in code:
+        Store the current sum in result[i].
+        Update sum by subtracting the element at start and adding the element at end + 1, using modulo to handle wrapping around the array.
+        Increment start and end by 1 to slide the window right.
+    Return the result array with the decrypted values.
+
+    """
     def decrypt2(self, code, k):
         result = [0 for _ in range(len(code))]
         if k == 0:
             return result
         # Define the initial window and initial sum
+        # This is the "sliding window"
         start, end, window_sum = 1, k, 0
         # If k < 0, the starting point will be end of the array.
         if k < 0:
@@ -61,9 +79,13 @@ class Solution(object):
         for i in range(start, end + 1):
             window_sum += code[i]
         # Scan through the code array as i moving to the right, update the window sum.
+        # The window is sliding in each iteration as the start and end values pointers are moving forward.
+        # The % len(code) ensures that the indices wrap around (circular behavior).
         for i in range(len(code)):
             result[i] = window_sum
+            # Subtract the value at the start index
             window_sum -= code[start % len(code)]
+            # Add the value at the next index after end
             window_sum += code[(end + 1) % len(code)]
             start += 1
             end += 1
